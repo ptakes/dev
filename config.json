@@ -1,0 +1,61 @@
+{
+   "Variables": [
+      {"DockerRepository": "ptakes"},
+      {"DockerImageDefault": "dev"},
+      {"DockerImage": "$(~ $DockerImage : $DockerImageDefault)"},
+      {"DockerImageVersion": "latest"},
+      {"DockerImageTag": "$DockerRepository/${DockerImage}:$DockerImageVersion"},
+     
+      {"ProjectDefault": "novolumen"},
+      {"Project": "$(~ $Project : $ProjectDefault)"},
+      
+      {"ContainerLang": "en_US"},
+      {"ContainerLanguage": "en_US:en"},
+      {"ContainerTimezone": "Europe/Amsterdam"},
+      {"ContainerDisplay": ":100"},
+      {"ContainerUser": "developer"},
+      {"ContainerUserID": "1000"},
+      {"ContainerUserHome": "/developer"},
+      {"ContainerUserName": "Software Developer"},
+      {"ContainerGroup": "developer"},
+      {"ContainerGroupID": "1000"},
+      {"ContainerDocker": "/var/docker"},
+      {"ContainerVolumes": "$ContainerDocker/volumes"},
+      {"ContainerDotNetPort": 5000},
+      {"ContainerXpraPort": 6100},
+      
+      {"HostRoot": "$(Split-Path $PSScriptRoot -Parent)"},
+      {"HostDocker": "$(Join-Path $HostRoot docker)"},
+      {"HostHome": "$(Join-Path $HostRoot home)"},
+      {"HostHomeConfig": "$(Join-Path $HostHome .config)"},
+      {"HostHomeConfigLilyterm": "$(Join-Path $HostHomeConfig lilyterm)"},
+      {"HostHomeDotNet": "$(Join-Path $HostHome .dotnet)"},
+      {"HostHomeNuGet": "$(Join-Path $HostHome .nuget)"},
+      {"HostHomeVSCode": "$(Join-Path $HostHome .vscode)"},
+      {"HostProjects": "$(Join-Path $HostRoot projects)"},
+      {"HostProject": "$(Join-Path $HostProjects $project)"}
+   ],
+   "DockerPorts": ["$ContainerDotNetPort", "$ContainerXpraPort"],
+   "DockerVolumes": [
+      "${HostHomeConfigLilyterm}:$ContainerVolumes/.config/lilyterm",
+      "${HostHomeDotNet}:$ContainerVolumes/.dotnet",
+      "${HostHomeNuGet}:$ContainerVolumes/.nuget",
+      "${HostHomeVSCode}:$ContainerVolumes/.vscode",
+      "${HostProject}:$ContainerVolumes/project"
+   ],
+   "BuildArgs": [
+      "ARG_LANG=$ContainerLang",
+      "ARG_LANGUAGE=$ContainerLanguage",
+      "ARG_TIMEZONE=$ContainerTimezone",
+      "ARG_DISPLAY=$ContainerDisplay",
+      "ARG_USER=$ContainerUser",
+      "ARG_USER_NAME=$ContainerUserName",
+      "ARG_UID=$ContainerUserID",
+      "ARG_HOME=$ContainerUserHome",
+      "ARG_GROUP=$ContainerGroup",
+      "ARG_GID=$ContainerGroupID",
+      "ARG_XPRA_PORT=$ContainerXpraPort",
+      "ARG_DOCKER=$ContainerDocker",
+      "ARG_VOLUMES=$ContainerVolumes"
+   ]
+}
